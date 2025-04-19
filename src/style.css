@@ -46,9 +46,9 @@ html, body {
   grid-template-rows: auto 1fr auto;
   height: 100%;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 1.5rem 2rem; /* More consistent padding */
   position: relative;
   z-index: 10;
 }
@@ -82,7 +82,7 @@ html, body {
 
 /* ===== Header Styles ===== */
 .header {
-  padding: 1.5rem 0;
+  padding: 1rem 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -95,7 +95,7 @@ html, body {
 }
 
 .logo {
-  height: 3rem;
+  height: 2.5rem; /* Slightly smaller */
   width: auto;
   filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
   transition: var(--transition);
@@ -139,8 +139,8 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  padding: 2rem 0;
+  gap: 1.25rem;
+  padding: 0; /* Removed padding to fit better */
   text-align: center;
 }
 
@@ -148,11 +148,11 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .main-title {
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-size: clamp(2rem, 5vw, 3rem); /* Slightly smaller */
   font-weight: 800;
   letter-spacing: -0.5px;
   line-height: 1.1;
@@ -184,15 +184,15 @@ html, body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 4px;
-  height: 100px;
-  margin: 1.5rem 0;
+  gap: 3px; /* Reduced from 4px */
+  height: 80px; /* Reduced from 100px */
+  margin: 1rem 0;
   width: 100%;
-  max-width: 500px;
+  max-width: 450px; /* Slightly smaller */
 }
 
 .spectrum-bar {
-  width: 6px;
+  width: 5px; /* Reduced from 6px */
   min-height: 2px;
   border-radius: 3px;
   transition: height 0.1s ease-out;
@@ -205,10 +205,10 @@ html, body {
 .loading-progress {
   width: 100%;
   max-width: 400px;
-  height: 5px;
+  height: 4px; /* Slightly smaller */
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
-  margin: 1rem 0;
+  margin: 0.5rem 0; /* Reduced margins */
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -227,7 +227,7 @@ html, body {
 
 .progress-text {
   position: absolute;
-  top: 10px;
+  top: 8px; /* Slightly adjusted */
   width: 100%;
   text-align: center;
   font-size: 0.8rem;
@@ -237,7 +237,7 @@ html, body {
 
 /* ===== Tagline Styles ===== */
 .tagline-wrapper {
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -245,7 +245,7 @@ html, body {
 
 .tagline-text {
   display: block;
-  font-size: 1rem;
+  font-size: 0.95rem; /* Slightly smaller */
   font-weight: 300;
   letter-spacing: 0.5px;
   line-height: 1.6;
@@ -264,7 +264,7 @@ html, body {
 
 /* ===== Footer Styles ===== */
 .footer {
-  padding: 1.5rem 0;
+  padding: 1rem 0; /* Reduced padding */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -385,15 +385,15 @@ html, body {
 /* ===== Responsive Adjustments ===== */
 @media (max-width: 768px) {
   .content-grid {
-    padding: 0 1.25rem;
+    padding: 1rem;
   }
   
   .header {
-    padding: 1rem 0;
+    padding: 0.75rem 0;
   }
   
   .main-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   
   .subtitle {
@@ -404,13 +404,13 @@ html, body {
   .footer {
     flex-direction: column;
     gap: 0.8rem;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
   }
   
   .music-player {
     order: -1;
     width: 100%;
-    max-width: 280px;
+    max-width: 250px;
   }
   
   .player-count, .quick-info {
@@ -419,17 +419,17 @@ html, body {
   }
   
   .audio-spectrum {
-    height: 70px;
-    gap: 3px;
-    margin: 1rem 0;
+    height: 60px;
+    gap: 2px;
+    margin: 0.75rem 0;
   }
   
   .spectrum-bar {
-    width: 5px;
+    width: 4px;
   }
   
   .tagline-text {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -437,4 +437,63 @@ html, body {
 .audio-spectrum {
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+/* Additional media query for very small screens */
+@media (max-height: 600px) {
+  .main-content {
+    gap: 0.75rem;
+  }
+  
+  .audio-spectrum {
+    height: 50px;
+    margin: 0.5rem 0;
+  }
+  
+  .tagline-wrapper {
+    margin-top: 0.75rem;
+  }
+  
+  .main-title {
+    font-size: 1.75rem;
+  }
+  
+  .footer, .header {
+    padding: 0.5rem 0;
+  }
+}
+
+/* Additional small width adjustments */
+@media (max-width: 480px) {
+  .content-grid {
+    padding: 0.75rem;
+  }
+  
+  .quick-info {
+    gap: 0.5rem;
+  }
+  
+  .logo {
+    height: 2rem;
+  }
+  
+  .main-title {
+    font-size: 1.6rem;
+  }
+  
+  .music-player {
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .spectrum-bar {
+    width: 3px;
+  }
+}
+
+/* Added vertical height constraints for content */
+@media (min-height: 800px) {
+  .main-content {
+    max-height: 70vh;
+    justify-content: center;
+  }
 }

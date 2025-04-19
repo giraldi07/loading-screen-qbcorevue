@@ -1,6 +1,6 @@
 <template>
   <div class="loading-container">
-    <!-- Background Elements -->
+    <!-- Background Elements (unchanged) -->
     <video autoplay muted loop class="bg-video">
       <source src="/videoclip.mp4" type="video/mp4" />
     </video>
@@ -82,57 +82,66 @@
       </footer>
     </div>
 
-    <!-- Audio element (now properly integrated) -->
-    <audio ref="audioPlayer" :src="currentTrack.url" loop></audio>
+    <!-- Audio element - Using one that works as default -->
+    <audio ref="audioPlayer" preload="auto"></audio>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { SkipBack as LucideSkipBack, SkipForward as LucideSkipForward } from 'lucide-vue-next'
 
+// Updated tracks with working paths - using the ones that aren't blocked
 const tracks = [
-  { name: 'Midnight Drift', url: '/music/hold-your-tongue.mp3' },
   { name: 'Neon Skyline', url: '/music/jump-around.mp3' },
   { name: 'Cruising Waves', url: '/music/my-own-summer.mp3' },
+  { name: 'Midnight Drift', url: '/music/hold-your-tongue.mp3' }, // Moved to end since it might be blocked
 ]
 
 const currentTrackIndex = ref(0)
 const currentTrack = ref(tracks[currentTrackIndex.value])
 const audioPlayer = ref<HTMLAudioElement | null>(null)
 const progress = ref(0)
+const playerCount = ref(128)
 const spectrumContainer = ref<HTMLElement | null>(null)
 const spectrumBars = ref<Array<{ height: number; color: string }>>([])
 const audioContext = ref<AudioContext | null>(null)
 const analyser = ref<AnalyserNode | null>(null)
 const dataArray = ref<Uint8Array | null>(null)
 const animationFrameId = ref<number | null>(null)
+const audioInitialized = ref(false)
 
 // Initialize audio spectrum
 const initAudioSpectrum = () => {
-  if (!audioPlayer.value) return
-
-  // Create audio context
-  const AudioContext = window.AudioContext || (window as any).webkitAudioContext
-  audioContext.value = new AudioContext()
-  const source = audioContext.value.createMediaElementSource(audioPlayer.value)
+  if (!audioPlayer.value || audioInitialized.value) return
   
-  // Create analyser
-  analyser.value = audioContext.value.createAnalyser()
-  analyser.value.fftSize = 256
-  source.connect(analyser.value)
-  analyser.value.connect(audioContext.value.destination)
-  
-  // Initialize data array
-  const bufferLength = analyser.value.frequencyBinCount
-  dataArray.value = new Uint8Array(bufferLength)
-  
-  // Initialize spectrum bars
-  const barCount = 50
-  spectrumBars.value = Array(barCount).fill(0).map((_, i) => ({
-    height: 2,
-    color: `hsl(${(i * 360) / barCount}, 100%, 50%)`
-  }))
+  try {
+    // Create audio context
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext
+    audioContext.value = new AudioContext()
+    const source = audioContext.value.createMediaElementSource(audioPlayer.value)
+    
+    // Create analyser
+    analyser.value = audioContext.value.createAnalyser()
+    analyser.value.fftSize = 256
+    source.connect(analyser.value)
+    analyser.value.connect(audioContext.value.destination)
+    
+    // Initialize data array
+    const bufferLength = analyser.value.frequencyBinCount
+    dataArray.value = new Uint8Array(bufferLength)
+    
+    // Initialize spectrum bars
+    const barCount = 40
+    spectrumBars.value = Array(barCount).fill(0).map((_, i) => ({
+      height: 2,
+      color: `hsl(${(i * 360) / barCount}, 100%, 50%)`
+    }))
+    
+    audioInitialized.value = true
+  } catch (error) {
+    console.error("Error initializing audio context:", error)
+  }
 }
 
 // Update spectrum visualization
@@ -147,7 +156,7 @@ const updateSpectrum = () => {
   
   spectrumBars.value.forEach((bar, i) => {
     const value = dataArray.value![i * step] || 0
-    bar.height = 2 + (value / 255) * 100 // Scale height from 2px to 102px
+    bar.height = 2 + (value / 255) * 80
   })
   
   animationFrameId.value = requestAnimationFrame(updateSpectrum)
@@ -178,29 +187,85 @@ const prevSong = () => {
 }
 
 const play = () => {
-  if (audioPlayer.value) {
+  if (!audioPlayer.value) return
+  
+  try {
+    // Set the source
+    audioPlayer.value.src = currentTrack.value.url
+    
     // Resume audio context if suspended
     if (audioContext.value?.state === 'suspended') {
       audioContext.value.resume()
     }
     
-    audioPlayer.value.load()
-    audioPlayer.value.play().catch(() => {})
+    // Play audio with user interaction requirement handling
+    const playPromise = audioPlayer.value.play()
+    
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.error("Audio playback error:", error)
+        // Auto-fallback to next song if current one fails
+        if (error.name === 'NotAllowedError' || error.name === 'AbortError') {
+          console.log("Trying next song due to playback issue")
+          nextSong()
+        }
+      })
+    }
+  } catch (error) {
+    console.error("Play error:", error)
   }
 }
 
+// Watch for changes to the audio player reference
+watch(audioPlayer, (newPlayer) => {
+  if (newPlayer && !audioInitialized.value) {
+    // Add event listeners for audio element
+    newPlayer.addEventListener('canplaythrough', () => {
+      console.log("Audio can play through")
+    })
+    
+    newPlayer.addEventListener('error', (e) => {
+      console.error("Audio error:", e)
+      // Try next song on error
+      nextSong()
+    })
+  }
+})
+
 onMounted(() => {
-  initAudioSpectrum()
-  play()
-  startLoadingSimulation()
-  
-  // Start spectrum animation when audio plays
-  audioPlayer.value?.addEventListener('play', () => {
-    if (audioContext.value?.state === 'suspended') {
-      audioContext.value.resume()
+  // Initialize after a small delay to ensure DOM is fully loaded
+  setTimeout(() => {
+    // Set up click handler for the entire document to initialize audio
+    document.addEventListener('click', () => {
+      if (!audioInitialized.value && audioPlayer.value) {
+        initAudioSpectrum()
+        // Set initial source
+        audioPlayer.value.src = currentTrack.value.url
+        play()
+      }
+    }, { once: true })
+    
+    // Still try to initialize
+    initAudioSpectrum()
+    
+    // Set initial source
+    if (audioPlayer.value) {
+      audioPlayer.value.src = currentTrack.value.url
     }
-    updateSpectrum()
-  })
+    
+    startLoadingSimulation()
+    
+    // Try to play (might be blocked without user interaction)
+    play()
+    
+    // Start spectrum animation when audio plays
+    audioPlayer.value?.addEventListener('play', () => {
+      if (audioContext.value?.state === 'suspended') {
+        audioContext.value.resume()
+      }
+      updateSpectrum()
+    })
+  }, 100)
 })
 
 onUnmounted(() => {
