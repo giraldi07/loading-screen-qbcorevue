@@ -1,85 +1,89 @@
 <template>
   <div class="loading-container">
-    <!-- Background video with gradient overlay -->
+    <!-- Background Elements -->
     <video autoplay muted loop class="bg-video">
       <source src="/videoclip.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
     </video>
-    
-    <!-- Gradient overlay for better text readability -->
     <div class="gradient-overlay"></div>
-    
-    <!-- Header with logo and title -->
-    <header class="header">
-      <div class="logo-wrapper">
-        <img src="/blossombiz.svg" alt="Server Logo" class="logo" />
-        <div class="server-info">
-          <span class="server-version">v5.0.2</span>
-          <span class="server-status online">ONLINE</span>
+
+    <!-- Content Grid Layout -->
+    <div class="content-grid">
+      <!-- Header Section -->
+      <header class="header">
+        <div class="logo-wrapper">
+          <img src="/blossombiz.svg" alt="Server Logo" class="logo" />
+          <div class="server-info">
+            <span class="server-version">v5.0.2</span>
+            <span class="server-status online">ONLINE</span>
+          </div>
         </div>
-      </div>
-    </header>
-    
-    <!-- Main content with centered elements -->
-    <main class="main-content">
-      <div class="title-wrapper">
-        <h1 class="main-title">
-          Welcome to <span class="highlight">BB City</span>
-        </h1>
-        <p class="subtitle">ROLEPLAY SERVER</p>
-      </div>
-      
-      <!-- Audio spectrum visualization -->
-      <div class="audio-spectrum" ref="spectrumContainer">
-        <div v-for="(bar, index) in spectrumBars" :key="index" 
-             class="spectrum-bar" 
-             :style="{ height: `${bar.height}px`, backgroundColor: bar.color }">
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="title-wrapper">
+          <h1 class="main-title">
+            Welcome to <span class="highlight">BB City</span>
+          </h1>
+          <p class="subtitle">ROLEPLAY SERVER</p>
         </div>
-      </div>
-      
-      <!-- Modern loading indicator -->
-      <div class="loading-progress">
-        <div class="progress-bar" :style="{ width: `${progress}%` }"></div>
-        <span class="progress-text">Loading world data... {{ progress }}%</span>
-      </div>
-      
-      <!-- Animated tagline -->
-      <div class="tagline-wrapper">
-        <p class="tagline">
-          <span class="tagline-text">Connecting to the city of dreams...</span>
-          <span class="tagline-text">Where your next story begins.</span>
-        </p>
-      </div>
-    </main>
-    
-    <!-- Footer with music player and additional info -->
-    <footer class="footer">
-      <div class="player-count">
-        <span class="player-count-number">247</span> PLAYERS ONLINE
-      </div>
-      
-      <div class="music-player">
-        <button @click="prevSong" class="player-control">
-          <LucideSkipBack />
-        </button>
-        <div class="track-info">
-          <p class="track-name">{{ currentTrack.name }}</p>
-          <p class="track-artist">BB City Radio</p>
+
+        <div class="audio-spectrum" ref="spectrumContainer">
+          <div 
+            v-for="(bar, index) in spectrumBars" 
+            :key="index" 
+            class="spectrum-bar" 
+            :style="{ 
+              height: `${bar.height}px`, 
+              background: bar.color,
+              opacity: bar.height / 100
+            }"
+          ></div>
         </div>
-        <button @click="nextSong" class="player-control">
-          <LucideSkipForward />
-        </button>
-      </div>
-      
-      <div class="quick-info">
-        <span class="info-item">FIVEM</span>
-        <span class="info-item">RP v2.3</span>
-        <span class="info-item">BB-CITY.COM</span>
-      </div>
-    </footer>
-    
-    <!-- Audio element -->
-    <audio ref="audioPlayer" :src="currentTrack.url" autoplay loop></audio>
+
+        <div class="loading-progress">
+          <div class="progress-bar" :style="{ width: `${progress}%` }"></div>
+          <span class="progress-text">Loading world data... {{ progress }}%</span>
+        </div>
+
+        <div class="tagline-wrapper">
+          <p class="tagline">
+            <span class="tagline-text">Connecting to the city of dreams...</span>
+            <span class="tagline-text">Where your next story begins.</span>
+          </p>
+        </div>
+      </main>
+
+      <!-- Footer Section -->
+      <footer class="footer">
+        <div class="player-count">
+          <span class="count">{{ playerCount }}</span>
+          <span>PLAYERS ONLINE</span>
+        </div>
+
+        <div class="music-player">
+          <button @click="prevSong" class="player-control">
+            <LucideSkipBack size="18" />
+          </button>
+          <div class="track-info">
+            <p class="track-name">{{ currentTrack.name }}</p>
+            <p class="track-artist">BB City Radio</p>
+          </div>
+          <button @click="nextSong" class="player-control">
+            <LucideSkipForward size="18" />
+          </button>
+        </div>
+
+        <div class="quick-info">
+          <span class="info-item">FIVEM</span>
+          <span class="info-item">RP v2.3</span>
+          <span class="info-item">BB-CITY.COM</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Audio element (now properly integrated) -->
+    <audio ref="audioPlayer" :src="currentTrack.url" loop></audio>
   </div>
 </template>
 
