@@ -17,17 +17,6 @@
             <span class="server-status online">ONLINE</span>
           </div>
         </div>
-      </header>
-
-      <!-- Main Content -->
-      <main class="main-content">
-        <div class="title-wrapper">
-          <h1 class="main-title">
-            Welcome to <span class="highlight">BB City</span>
-          </h1>
-          <p class="subtitle">ROLEPLAY SERVER</p>
-        </div>
-
         <div class="audio-spectrum" ref="spectrumContainer">
           <div 
             v-for="(bar, index) in spectrumBars" 
@@ -39,6 +28,38 @@
               opacity: bar.height / 100
             }"
           ></div>
+        </div>
+      </header>
+
+      <!-- Left Popup: Tips -->
+      <section class="popup popup-left">
+        <h2 class="popup-title">💡 Tips</h2>
+        <ul class="popup-list">
+          <li>Gunakan /help untuk melihat perintah.</li>
+          <li>Pakai voice chat buat interaksi maksimal.</li>
+          <li>Ingat roleplay rules – tetap fair dan fun!</li>
+        </ul>
+      </section>
+
+      <!-- Right Popup: Developer List -->
+      <section class="popup popup-right">
+        <h2 class="popup-title">👨‍💻 Developers</h2>
+        <ul class="popup-list">
+          <li>Adit - Lead Dev</li>
+          <li>Nia - UI/UX</li>
+          <li>Rio - Backend Wizard</li>
+          <li>Lexa - Infrastructure</li>
+        </ul>
+      </section>
+
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="title-wrapper">
+          <h1 class="main-title">
+            Welcome to <span class="highlight">BB City</span>
+          </h1>
+          <p class="subtitle">ROLEPLAY SERVER</p>
         </div>
 
         <div class="loading-progress">
@@ -111,56 +132,79 @@ const dataArray = ref<Uint8Array | null>(null)
 const animationFrameId = ref<number | null>(null)
 const audioInitialized = ref(false)
 
+// Helper for smooth transition
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+
 // Initialize audio spectrum
 const initAudioSpectrum = () => {
   if (!audioPlayer.value || audioInitialized.value) return
-  
+
   try {
-    // Create audio context
+    // Audio context setup
     const AudioContext = window.AudioContext || (window as any).webkitAudioContext
     audioContext.value = new AudioContext()
     const source = audioContext.value.createMediaElementSource(audioPlayer.value)
-    
-    // Create analyser
+
+    // Analyser config
     analyser.value = audioContext.value.createAnalyser()
-    analyser.value.fftSize = 256
+    analyser.value.fftSize = 1024
+    analyser.value.smoothingTimeConstant = 0.85 // smooth decay
+
     source.connect(analyser.value)
     analyser.value.connect(audioContext.value.destination)
-    
-    // Initialize data array
+
+    // Frequency data array
     const bufferLength = analyser.value.frequencyBinCount
     dataArray.value = new Uint8Array(bufferLength)
-    
-    // Initialize spectrum bars
+
+    // Visual bars
     const barCount = 40
-    spectrumBars.value = Array(barCount).fill(0).map((_, i) => ({
-      height: 2,
-      color: `hsl(${(i * 360) / barCount}, 100%, 50%)`
+    spectrumBars.value = Array.from({ length: barCount }, () => ({
+      height: 1,
+      color: '#ff0000'
     }))
-    
+
     audioInitialized.value = true
   } catch (error) {
     console.error("Error initializing audio context:", error)
   }
 }
 
-// Update spectrum visualization
+// Update visualization frame
 const updateSpectrum = () => {
   if (!analyser.value || !dataArray.value) return
 
   analyser.value.getByteFrequencyData(dataArray.value)
-  
-  // Normalize and update bar heights
+
   const barCount = spectrumBars.value.length
-  const step = Math.floor(dataArray.value.length / barCount)
-  
-  spectrumBars.value.forEach((bar, i) => {
-    const value = dataArray.value![i * step] || 0
-    bar.height = 2 + (value / 255) * 80
-  })
-  
+  const totalBins = dataArray.value.length
+
+  for (let i = 0; i < barCount; i++) {
+    // Logarithmic frequency bin mapping
+    const logIndex = Math.pow(i / barCount, 2) * (totalBins - 1)
+    const binStart = Math.floor(logIndex)
+    const binEnd = Math.min(totalBins - 1, binStart + 2)
+
+    // Average frequency value in the bin range
+    let sum = 0
+    for (let j = binStart; j <= binEnd; j++) {
+      sum += dataArray.value[j]
+    }
+    const avg = sum / (binEnd - binStart + 1)
+
+    // Scaled height for visual bars
+    const scaledHeight = 1 + Math.pow(avg / 255, 2.5) * 40
+
+    // Smooth height transition
+    spectrumBars.value[i].height = lerp(spectrumBars.value[i].height, scaledHeight, 0.2)
+
+    // Color via HSL gradient
+    spectrumBars.value[i].color = `hsl(${(i / barCount) * 360}, 100%, 60%)`
+  }
+
   animationFrameId.value = requestAnimationFrame(updateSpectrum)
 }
+
 
 // Simulate loading progress
 const startLoadingSimulation = () => {
