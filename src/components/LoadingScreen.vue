@@ -83,10 +83,6 @@
           <p class="subtitle">ROLEPLAY SERVER</p>
         </div>
 
-        <!-- <div class="loading-progress">
-          <div class="progress-bar" :style="{ width: `${progress}%` }"></div>
-          <span class="progress-text">Loading world data... {{ progress }}%</span>
-        </div> -->
 
         <div class="loading-progress fx-gamer">
           <div class="progress-border">
