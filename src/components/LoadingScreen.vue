@@ -83,10 +83,20 @@
           <p class="subtitle">ROLEPLAY SERVER</p>
         </div>
 
-        <div class="loading-progress">
+        <!-- <div class="loading-progress">
           <div class="progress-bar" :style="{ width: `${progress}%` }"></div>
           <span class="progress-text">Loading world data... {{ progress }}%</span>
+        </div> -->
+
+        <div class="loading-progress fx-gamer">
+          <div class="progress-border">
+            <div class="progress-fill" :style="{ width: `${progress}%` }">
+              <span class="spark"></span>
+            </div>
+          </div>
+          <span class="progress-label">Loading world data... <span class="percent">{{ progress }}%</span></span>
         </div>
+
 
         <div class="tagline-scroller">
           <div class="tagline-track">
