@@ -148,21 +148,21 @@ html, body {
 .title-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
+  gap: 2px;
+  margin-top: 45vh; /* Biar turun sedikit */
+  text-align: center;
 }
 
 .main-title {
-  font-size: clamp(2rem, 5vw, 3rem); /* Slightly smaller */
+  font-size: 2rem; /* Slightly smaller */
   font-weight: 800;
   letter-spacing: -0.5px;
-  line-height: 1.1;
   background: linear-gradient(to right, #fff 30%, var(--primary-light) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  margin-bottom: 0.5rem;
+  margin-bottom: 2px;
 }
 
 .main-title .highlight {
@@ -177,7 +177,8 @@ html, body {
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--text-secondary);
-  margin-top: -0.5rem;
+  margin-top: 2px;
+  margin-bottom: -20px;
 }
 
 /* ===== Audio Spectrum Container ===== */
@@ -239,15 +240,16 @@ html, body {
 
 /* ===== Loading Progress ===== */
 .loading-progress {
-  width: 100%;
-  max-width: 400px;
-  height: 4px; /* Slightly smaller */
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  margin: 0.5rem 0; /* Reduced margins */
-  position: relative;
+  height: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 .progress-bar {
@@ -263,40 +265,52 @@ html, body {
 
 .progress-text {
   position: absolute;
-  top: 8px; /* Slightly adjusted */
-  width: 100%;
-  text-align: center;
-  font-size: 0.8rem;
+  top: 0.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: #fff;
+  text-shadow: 0 0 3px #000;
 }
 
 /* ===== Tagline Styles ===== */
-.tagline-wrapper {
-  margin-top: 1.25rem;
+.tagline-scroller {
+  height: 4rem;
+  overflow: hidden;
+  position: relative;
+  margin-top: 2rem;
+ 
+}
+
+.tagline-track {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  animation: scrollLoop 12s linear infinite;
 }
 
-.tagline-text {
-  display: block;
-  font-size: 0.95rem; /* Slightly smaller */
-  font-weight: 300;
-  letter-spacing: 0.5px;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  opacity: 0;
-  animation: fadeInUp 0.8s ease forwards;
+.tagline-line {
+  font-size: 1rem;
+  color: #ffffff81;
+  text-align: center;
+  padding: 0.3rem 0;
+  white-space: nowrap;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
 }
 
-.tagline-text:nth-child(1) {
-  animation-delay: 0.5s;
+/* Animasi mulus */
+@keyframes scrollLoop {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
 }
 
-.tagline-text:nth-child(2) {
-  animation-delay: 1s;
-}
+
+
+
 
 /* ===== Footer Styles ===== */
 .footer {
@@ -352,45 +366,101 @@ html, body {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Popup Tips & Developer */
+/* Common popup style */
 .popup {
   position: absolute;
   top: 30%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(20, 20, 20, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
   color: white;
-  width: 220px;
+  width: 260px;
   z-index: 15;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  font-family: 'Segoe UI', sans-serif;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
 }
 
+/* Popup positioning */
 .popup-left {
-  left: 1.5rem;
+  left: 2rem;
 }
 
 .popup-right {
-  right: 1.5rem;
+  right: 2rem;
 }
 
+/* Titles */
 .popup-title {
+  font-size: 1.1rem;
   font-weight: bold;
-  color: #ffd700;
-  margin-bottom: 0.5rem;
+  color: #FFD700;
+  margin-bottom: 1rem;
 }
 
+/* Tips */
 .popup-list {
   list-style: none;
   padding: 0;
   margin: 0;
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .popup-list li {
-  margin-bottom: 0.4rem;
-  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+/* Devs */
+.popup-dev-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dev-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  transition: background 0.3s ease;
+}
+
+.dev-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dev-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #444;
+}
+
+.dev-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.dev-name {
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.dev-role {
+  font-size: 0.8rem;
+  color: #ccc;
 }
 
 

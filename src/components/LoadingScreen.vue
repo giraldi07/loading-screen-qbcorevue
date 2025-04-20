@@ -35,29 +35,50 @@
       <section class="popup popup-left">
         <h2 class="popup-title">💡 Tips</h2>
         <ul class="popup-list">
-          <li>Gunakan /help untuk melihat perintah.</li>
-          <li>Pakai voice chat buat interaksi maksimal.</li>
-          <li>Ingat roleplay rules – tetap fair dan fun!</li>
+          <li><strong>/help</strong> – Lihat daftar perintah penting.</li>
+          <li>Gunakan <strong>voice chat</strong> untuk interaksi yang lebih nyata.</li>
+          <li>Pahami roleplay rules – <em>fairplay</em> itu keren!</li>
+          <li>Jangan lupa <strong>/report</strong> kalau ada masalah.</li>
+          <li>Aktif di <strong>Discord</strong> biar update terus!</li>
         </ul>
       </section>
+
 
       <!-- Right Popup: Developer List -->
       <section class="popup popup-right">
         <h2 class="popup-title">👨‍💻 Developers</h2>
-        <ul class="popup-list">
-          <li>Adit - Lead Dev</li>
-          <li>Nia - UI/UX</li>
-          <li>Rio - Backend Wizard</li>
-          <li>Lexa - Infrastructure</li>
+        <ul class="popup-dev-list">
+          <li class="dev-card">
+            <img src="/man.png" alt="GeraldPra Avatar" class="dev-avatar" />
+            <div class="dev-info">
+              <p class="dev-name">GeraldPra</p>
+              <p class="dev-role">Fullstack Architect</p>
+            </div>
+          </li>
+          <li class="dev-card">
+            <img src="/man.png" alt="Charles Christ Avatar" class="dev-avatar" />
+            <div class="dev-info">
+              <p class="dev-name">Charles Christ</p>
+              <p class="dev-role">Gameplay Engineer</p>
+            </div>
+          </li>
+          <li class="dev-card">
+            <img src="/man.png" alt="Setyo Hp Avatar" class="dev-avatar" />
+            <div class="dev-info">
+              <p class="dev-name">Setyo Hp</p>
+              <p class="dev-role">Infrastructure Specialist</p>
+            </div>
+          </li>
         </ul>
       </section>
+
 
 
       <!-- Main Content -->
       <main class="main-content">
         <div class="title-wrapper">
           <h1 class="main-title">
-            Welcome to <span class="highlight">BB City</span>
+            Welcome to <span class="highlight">Blossom City</span>
           </h1>
           <p class="subtitle">ROLEPLAY SERVER</p>
         </div>
@@ -67,12 +88,23 @@
           <span class="progress-text">Loading world data... {{ progress }}%</span>
         </div>
 
-        <div class="tagline-wrapper">
-          <p class="tagline">
-            <span class="tagline-text">Connecting to the city of dreams...</span>
-            <span class="tagline-text">Where your next story begins.</span>
-          </p>
+        <div class="tagline-scroller">
+          <div class="tagline-track">
+            <p class="tagline-line">Connecting to the city of dreams...</p>
+            <p class="tagline-line">Where your next story begins.</p>
+            <p class="tagline-line">Live your story. Shape your fate.</p>
+            <p class="tagline-line">Only in Blossom City.</p>
+
+            <!-- Duplicate for seamless looping -->
+            <p class="tagline-line">Connecting to the city of dreams...</p>
+            <p class="tagline-line">Where your next story begins.</p>
+            <p class="tagline-line">Live your story. Shape your fate.</p>
+            <p class="tagline-line">Only in Blossom City.</p>
+          </div>
         </div>
+
+
+
       </main>
 
       <!-- Footer Section -->
