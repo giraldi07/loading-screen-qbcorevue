@@ -122,14 +122,14 @@
 
         <div class="music-player">
           <button @click="prevSong" class="player-control">
-            <LucideSkipBack size="18" />
+            <LucideSkipBack :size="18" />
           </button>
           <div class="track-info">
             <p class="track-name">{{ currentTrack.name }}</p>
             <p class="track-artist">BB City Radio</p>
           </div>
           <button @click="nextSong" class="player-control">
-            <LucideSkipForward size="18" />
+            <LucideSkipForward :size="18" />
           </button>
         </div>
 
